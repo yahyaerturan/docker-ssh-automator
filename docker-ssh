@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Set Colours
+TC_RESET=$'\x1B[0m'
+TC_SKY=$'\x1B[0;37;44m'
+TC_GRD=$'\x1B[0;30;42m'
+TC_TEXT=$'\x1B[38;5;203m'
+CLREOL=$'\x1B[K'
+
+# Get list of containers by names
+DOCKER_PS_LIST_BY_NAMES="$(docker ps --format '{{.Names}}')"
+
+# Convert container names to an array
+CONTAINERS_ARRAY=($DOCKER_PS_LIST_BY_NAMES)
+
+# Add a new element to array
+CONTAINERS_ARRAY+=('Quit')
+
+# Define function to create the menu
+createmenu ()
+{
+    echo -n "${TC_GRD}${CLREOL}"
+    echo -e "\n    Docker Utilities Pack :: SSH Automator ${CLREOL}"
+    echo -n "${TC_GRD}${CLREOL}"
+    echo -e "\n    You have currrently $# container available. Please select the container you want to ssh-in. ${CLREOL}"
+    echo -n "${TC_GRD}${CLREOL}"
+    echo -e "\n    Author: Yahya ERTURAN <root@yahyaerturan.com> ${CLREOL}"
+    echo -n "${TC_GRD}${CLREOL}"
+    echo ${TC_RESET}
+    select option; do # in "$@" is the default
+        if [ "$REPLY" -eq "$#" ];
+        then
+            echo "Exiting..."
+            break;
+        elif [ 1 -le "$REPLY" ] && [ "$REPLY" -le $(($#-1)) ];
+        then
+            echo -e "You have selected option $REPLY for $option.\n"
+            echo -e "${TC_SKY}Entering /bin/bash to $option container...${TC_RESET}"
+            docker exec -it ${option} /bin/bash
+            break;
+        else
+            echo "You need to select a number between 1-$#. To exit press $#."
+        fi
+    done
+}
+
+# Call function with container names array
+createmenu "${CONTAINERS_ARRAY[@]}"

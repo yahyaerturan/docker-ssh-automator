@@ -22,7 +22,7 @@ createmenu ()
     echo -n "${TC_GRD}${CLREOL}"
     echo -e "\n    Docker Utilities Pack :: SSH Automator ${CLREOL}"
     echo -n "${TC_GRD}${CLREOL}"
-    echo -e "\n    You have currrently $# container available. Please select the container you want to ssh-in. ${CLREOL}"
+    echo -e "\n    You have currrently $(($#-1)) container available. Please select the container you want to ssh-in. ${CLREOL}"
     echo -n "${TC_GRD}${CLREOL}"
     echo -e "\n    Author: Yahya ERTURAN <root@yahyaerturan.com> ${CLREOL}"
     echo -n "${TC_GRD}${CLREOL}"
@@ -39,7 +39,7 @@ createmenu ()
             docker exec -it ${option} /bin/bash
             break;
         else
-            echo "You need to select a number between 1-$#. To exit press $#."
+            echo "You need to select a number between 1-$(($#-1)). To exit press $#."
         fi
     done
 }
